@@ -48,7 +48,7 @@ def get_concordance_json(word, corpus=SUBCORPUS) -> dict | None:
             ]
         },
         "format": "json",
-        "size": 1
+        "size": 10
     }
 
     response = requests.post(url, json=request_body, headers=headers)
@@ -67,6 +67,6 @@ if __name__ == "__main__":
     print(data.get("queryStats"))
     print(data.get("subcorpStats"))
     print(data.get("corpusStats"))
-    print(data.keys())
+    print(data.get("groups"))
     # print(data.get("groups"))
     # print(TOKEN)
