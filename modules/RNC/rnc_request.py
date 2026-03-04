@@ -9,7 +9,7 @@ DATE_END = load_corpus_settings().DATE_END
 SUBCORPUS = load_corpus_settings().RNC_SUBCORPUS
 
 
-def get_concordance_json(word, corpus=SUBCORPUS) -> dict | None:
+def concordance_json(word, corpus=SUBCORPUS) -> dict | None:
     url = "https://ruscorpora.ru/api/v1/lex-gramm/concordance"
 
     headers = {
@@ -57,16 +57,50 @@ def get_concordance_json(word, corpus=SUBCORPUS) -> dict | None:
         print(response.json().get("message"))
         return None
 
-    return response.json()
+    try:
+        return response.json()
+    except requests.exceptions.JSONDecodeError:
+        print(response.text)
+        return None
+
+def word_portrait_json(word, corpus=SUBCORPUS) -> dict | None:
+    url = "https://ruscorpora.ru/api/v1/word-portrait/"
+
+    headers = {
+        "Authorization": f"Bearer {TOKEN}",
+        "Content-Type": "application/json"
+    }
+
+    request_body = {
+            "lemma": word,
+            "corpus": {
+                "type": corpus
+            },
+            "pos": "string",
+            "seed": 57945,
+            "statFields": [
+                "created"
+            ],
+            "resultType": [
+                "PORTRAIT_WORD_INFO",
+                "PORTRAIT_SKETCH",
+                "PORTRAIT_SIMILAR",
+                "PORTRAIT_STATS"
+            ]
+        }
+
+    response = requests.post(url, json=request_body, headers=headers)
+
+    if response.status_code != 200:
+        print(response.text)
+        return None
+
+    try:
+        return response.json()
+    except requests.exceptions.JSONDecodeError:
+        print(response.text)
+        return None
+
 
 if __name__ == "__main__":
-
-    data = get_concordance_json("статус")
-
-
-    print(data.get("queryStats"))
-    print(data.get("subcorpStats"))
-    print(data.get("corpusStats"))
-    print(data.get("groups"))
-    # print(data.get("groups"))
-    # print(TOKEN)
+    pass
