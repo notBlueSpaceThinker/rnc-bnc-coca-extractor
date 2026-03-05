@@ -96,6 +96,3 @@ if __name__ == "__main__":
     # pprint(get_similar_words(data))
     print(data.keys())
     pprint(get_word_sketch(data))
-    
-
-
